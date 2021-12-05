@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using AnkiCollectionIO;
 using AnkiCollectionIO.Schemas;
 using CsvHelper;
@@ -14,6 +15,7 @@ namespace AnkiCollectionToCsv.CLI.AnkiCollectionToCsv
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
             if (args.Length < 2)
             {
                 throw new Exception("Invalid arguments. ([0]: path to colpkg, [1]: path to output directory)");
