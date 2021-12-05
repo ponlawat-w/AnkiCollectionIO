@@ -24,7 +24,7 @@ namespace AnkiCollectionIO.Schemas
         public long SortField { get; set; }
 
         [JsonPropertyName("did")]
-        public long DeckId { get; set; }
+        public long? DeckId { get; set; }
 
         [JsonPropertyName("tmpls")]
         public IEnumerable<ModelTemplate> Templates { get; set; }
