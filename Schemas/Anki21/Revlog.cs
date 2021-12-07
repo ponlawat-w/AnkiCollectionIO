@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
-namespace AnkiCollectionIO.Schemas
+namespace AnkiCollectionIO.Schemas.Anki21
 {
     [Table("revlog")]
     [Index(nameof(Cid), Name = "ix_revlog_cid")]

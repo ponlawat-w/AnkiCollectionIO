@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace AnkiCollectionIO.Schemas
+namespace AnkiCollectionIO.Schemas.Anki21
 {
-    public partial class AnkiCollectionDbContext : DbContext
+    public partial class Anki21DbContext : DbContext
     {
         public SqliteConnection _connection { get; }
 
-        public AnkiCollectionDbContext(SqliteConnection connection)
+        public Anki21DbContext(SqliteConnection connection)
         {
             _connection = connection;
         }
 
-        public AnkiCollectionDbContext(DbContextOptions<AnkiCollectionDbContext> options)
+        public Anki21DbContext(DbContextOptions<Anki21DbContext> options)
             : base(options)
         {
         }

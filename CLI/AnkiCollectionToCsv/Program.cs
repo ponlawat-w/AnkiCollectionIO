@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using AnkiCollectionIO;
-using AnkiCollectionIO.Schemas;
+using AnkiCollectionIO.Schemas.Anki21;
 using CsvHelper;
 
 namespace AnkiCollectionToCsv.CLI.AnkiCollectionToCsv

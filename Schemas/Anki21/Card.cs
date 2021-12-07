@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
-namespace AnkiCollectionIO.Schemas
+namespace AnkiCollectionIO.Schemas.Anki21
 {
     [Table("cards")]
     [Index(nameof(NoteId), Name = "ix_cards_nid")]

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace AnkiCollectionIO.Schemas
+namespace AnkiCollectionIO.Schemas.Anki21
 {
     public class ModelField
     {

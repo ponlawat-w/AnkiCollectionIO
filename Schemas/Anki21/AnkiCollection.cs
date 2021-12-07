@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
-namespace AnkiCollectionIO.Schemas
+namespace AnkiCollectionIO.Schemas.Anki21
 {
     [Table("col")]
     public partial class AnkiCollection

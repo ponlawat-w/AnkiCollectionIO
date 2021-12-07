@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AnkiCollectionIO.Schemas;
+using AnkiCollectionIO.Schemas.Anki21;
 
 namespace AnkiCollectionIO.CLI.TestConsole
 {

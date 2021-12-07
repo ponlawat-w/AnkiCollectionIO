@@ -1,20 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AnkiCollectionIO.Schemas;
+using AnkiCollectionIO.Schemas.Anki21;
 using Microsoft.Data.Sqlite;
 
 namespace AnkiCollectionIO
 {
     public partial class CollectionReader
     {
-        public AnkiCollectionDbContext DbContext;
+        public Anki21DbContext DbContext;
         private SqliteConnection _connection;
 
         private void EstablishSqlite()
         {
             _connection = new SqliteConnection($"DataSource={SqlitePath}");
-            DbContext = new AnkiCollectionDbContext(_connection);
+            DbContext = new Anki21DbContext(_connection);
         }
 
         public List<AnkiCollection> GetCollections()
