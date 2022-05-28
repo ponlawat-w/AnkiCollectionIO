@@ -1,38 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AnkiCollectionIO.Schemas.Anki21;
+﻿using AnkiCollectionIO.Schemas.Anki2;
 
-namespace AnkiCollectionIO.CLI.TestConsole
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+Anki2DbContext dbContext = new Anki2DbContext("./data/collection.anki2");
+List<NoteType> noteTypes = dbContext.NoteTypes.ToList();
+foreach (NoteType noteType in noteTypes)
 {
-  public class Program
-  {
-      public static void Main(string[] args)
-      {
-          Console.OutputEncoding = Encoding.UTF8;
-          using (CollectionReader collectionReader = new CollectionReader("./data/collection.colpkg"))
-          {
-            List<AnkiCollection> collections = collectionReader.GetCollections();
-            foreach (AnkiCollection collection in collections)
-            {
-                IEnumerable<Model> models = collection.ToModels();
-                foreach (Model model in models)
-                {
-                    Console.WriteLine($"Model {model.Id} | {model.Name}");
-                    List<Note> notes = collectionReader.DbContext.Notes.Where(n => n.ModelID == model.Id).Take(10).ToList();
-                    foreach (Note note in notes)
-                    {
-                        IDictionary<string, string> fieldValues = note.GetFieldValue(model);
-                        foreach (KeyValuePair<string, string> fieldValue in fieldValues)
-                        {
-                            Console.Write($"\t{fieldValue.Key} = {fieldValue.Value}");
-                        }
-                        Console.WriteLine();
-                    }
-                }
-            }
-          }
-      }
-  }
+    Console.WriteLine($"=== NoteType {noteType.Id} | {noteType.Name} ===");
+    List<Note> notes = dbContext.Notes
+        .Where(note => note.NoteTypeId == noteType.Id)
+        .Take(10).ToList();
+    foreach (Note note in notes)
+    {
+        IDictionary<string, string> fieldsDict = note.GetFieldsDictionary(dbContext, value => value.Replace("&nbsp;", "_"));
+        foreach (KeyValuePair<string, string> fieldValue in fieldsDict)
+        {
+            Console.WriteLine($"  {fieldValue.Key} = {fieldValue.Value}");
+        }
+    }
 }
