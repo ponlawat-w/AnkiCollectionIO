@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CLI", "CLI", "{94F93FCE-44A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnkiCollectionIO.CLI.TestConsole", "CLI\TestConsole\AnkiCollectionIO.CLI.TestConsole.csproj", "{86F1F6A1-AE4B-416A-9B98-B7A27197CC4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnkiCollectionIO.CLI.AnkiCollectionToCsv", "CLI\AnkiCollectionToCsv\AnkiCollectionIO.CLI.AnkiCollectionToCsv.csproj", "{A8165881-7903-438E-9C7D-EBECD721B0BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,8 +32,13 @@ Global
 		{9619F446-D9E6-428E-A5F0-3C74048E4BE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9619F446-D9E6-428E-A5F0-3C74048E4BE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9619F446-D9E6-428E-A5F0-3C74048E4BE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8165881-7903-438E-9C7D-EBECD721B0BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8165881-7903-438E-9C7D-EBECD721B0BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8165881-7903-438E-9C7D-EBECD721B0BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8165881-7903-438E-9C7D-EBECD721B0BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{86F1F6A1-AE4B-416A-9B98-B7A27197CC4F} = {94F93FCE-44A2-4728-A5B2-AD1E52B6B090}
+		{A8165881-7903-438E-9C7D-EBECD721B0BB} = {94F93FCE-44A2-4728-A5B2-AD1E52B6B090}
 	EndGlobalSection
 EndGlobal

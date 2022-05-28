@@ -93,7 +93,7 @@ public partial class Anki2DbContext : DbContext
 
         modelBuilder.Entity<Template>(entity =>
         {
-            entity.HasKey(e => new { e.TemplateId, e.Order });
+            entity.HasKey(e => new { e.NoteTypeId, e.Order });
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 namespace AnkiCollectionIO.Schemas.Anki2;
 
 [Table("templates")]
-[Index("Name", "TemplateId", Name = "idx_templates_name_ntid", IsUnique = true)]
+[Index("Name", "NoteTypeId", Name = "idx_templates_name_ntid", IsUnique = true)]
 [Index("UserNumber", Name = "idx_templates_usn")]
 public partial class Template
 {
     [Key]
     [Column("ntid", TypeName = "integer")]
-    public long TemplateId { get; set; }
+    public long NoteTypeId { get; set; }
 
     [Key]
     [Column("ord", TypeName = "integer")]
