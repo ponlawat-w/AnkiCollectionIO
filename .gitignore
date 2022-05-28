@@ -32,6 +32,7 @@ obj/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,dotnetcore
 
+*.anki2
 *.anki21
 *.colpkg
 out

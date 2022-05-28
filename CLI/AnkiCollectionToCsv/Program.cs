@@ -1,76 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using AnkiCollectionIO;
-using AnkiCollectionIO.Schemas.Anki21;
+﻿using System.Dynamic;
+using AnkiCollectionIO.Schemas.Anki2;
 using CsvHelper;
 
-namespace AnkiCollectionToCsv.CLI.AnkiCollectionToCsv
+static class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        if (args.Length < 2)
         {
-            Console.OutputEncoding = Encoding.UTF8;
-            if (args.Length < 2)
-            {
-                throw new Exception("Invalid arguments. ([0]: path to colpkg, [1]: path to output directory)");
-            }
-            string pathToCollection = args[0];
-            string pathToOutput = args[1];
-
-            Directory.CreateDirectory(pathToOutput);
-            using (CollectionReader reader = new CollectionReader(pathToCollection, Path.Combine(pathToOutput, "temp")))
-            {
-                AnkiCollection collection = reader.GetCollection();
-                if (collection == null)
-                {
-                    throw new Exception("No collections.");
-                }
-
-                IEnumerable<Model> models = collection.ToModels();
-                foreach (Model model in models)
-                {
-                    IEnumerable<dynamic> records = new List<dynamic>();
-                    List<dynamic> notes = reader.QueryNotes()
-                        .Where(n => n.ModelID == model.Id)
-                        .OrderBy(n => n.SortField)
-                        .Select(n => DictionaryToDynamic(n.GetFieldValue(model, true)))
-                        .ToList();
-                    
-                    if (notes.Count() == 0)
-                    {
-                        continue;
-                    }
-
-                    Console.Write($"Writing note type {model.Name}...");
-
-                    using (StreamWriter writer = new StreamWriter(Path.Combine(pathToOutput, $"{model.Name}.csv")))
-                    using (CsvWriter csvWriter = new CsvWriter(writer, CultureInfo.InvariantCulture))
-                    {
-                        csvWriter.WriteRecords(notes);
-                    }
-
-                    Console.WriteLine("OK");
-                }
-            }
-
-            Console.WriteLine("Finish");
+            throw new Exception("Invalid arguments. ([0]: path to anki2, [1]: path to output dictionary)");
         }
 
-        static private dynamic DictionaryToDynamic(IDictionary<string, string> dictionary)
+        string pathToCollection = args[0];
+        string pathToOutput = args[1];
+
+        Func<string, string> injector = value => value.Trim().Replace("&nbsp;" , " ");
+
+        Directory.CreateDirectory(pathToOutput);
+        Anki2DbContext dbContext = new Anki2DbContext(pathToCollection);
+        List<NoteType> noteTypes = dbContext.NoteTypes.ToList();
+        foreach (NoteType noteType in noteTypes)
         {
-            IDictionary<string, object> expandoObject = (IDictionary<string, object>)new ExpandoObject();
-            foreach (KeyValuePair<string, string> dictElement in dictionary)
+            dynamic[] notes = dbContext.Notes
+                .Where(note => note.NoteTypeId == noteType.Id)
+                .OrderBy(note => note.SortField)
+                .Select(note => DictionaryToDynamic(note.GetFieldsDictionary(dbContext, injector)))
+                .ToArray();
+            
+            if (notes.Length == 0)
             {
-                expandoObject.Add(new KeyValuePair<string, object>(dictElement.Key, dictElement.Value));
+                continue;
             }
 
-            return expandoObject;
+            Console.Write($"Writing note type {noteType.Name}...");
+
+            using (StreamWriter writer = new StreamWriter(Path.Combine(pathToOutput, $"{noteType.Name}.csv")))
+            using (CsvWriter csvWriter = new CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
+            {
+                csvWriter.WriteRecords(notes);
+            }
+
+            Console.WriteLine("OK");
         }
+
+        Console.WriteLine("Finish");
+    }
+
+    static dynamic DictionaryToDynamic(IDictionary<string, string> dictionary)
+    {
+        IDictionary<string, object> expandoObject = new ExpandoObject() as IDictionary<string, object>;
+        foreach (KeyValuePair<string, string> dictElement in dictionary)
+        {
+            expandoObject.Add(new KeyValuePair<string, object>(dictElement.Key, dictElement.Value));
+        }
+
+        return expandoObject;
     }
 }
+
