@@ -12,9 +12,13 @@ public partial class Anki2DbContext : DbContext
         Connection = new SqliteConnection();
     }
 
-    public Anki2DbContext(string datasourcePath)
+    public Anki2DbContext(string datasourcePath, bool readOnly = false)
     {
-        Connection = new SqliteConnection($"DataSource={datasourcePath}");
+        Connection = new SqliteConnection(new SqliteConnectionStringBuilder
+        {
+            DataSource = $"file:{datasourcePath}" + (readOnly ? "?immutable=1" : ""),
+            Mode = readOnly ? SqliteOpenMode.ReadOnly : SqliteOpenMode.ReadWrite
+        }.ToString());
     }
 
     public Anki2DbContext(DbContextOptions<Anki2DbContext> options)

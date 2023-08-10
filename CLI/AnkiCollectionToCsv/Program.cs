@@ -18,7 +18,7 @@ static class Program
         Func<string, string> injector = value => value.Trim().Replace("&nbsp;" , " ");
 
         Directory.CreateDirectory(pathToOutput);
-        Anki2DbContext dbContext = new Anki2DbContext(pathToCollection);
+        Anki2DbContext dbContext = new Anki2DbContext(pathToCollection, true);
         List<NoteType> noteTypes = dbContext.NoteTypes.ToList();
         foreach (NoteType noteType in noteTypes)
         {
