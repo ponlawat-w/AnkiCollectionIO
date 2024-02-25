@@ -1,6 +1,7 @@
 ﻿using System.Dynamic;
 using AnkiCollectionIO.Schemas.Anki2;
 using CsvHelper;
+using CsvHelper.Configuration;
 
 static class Program
 {
@@ -18,7 +19,7 @@ static class Program
         Func<string, string> injector = value => value.Trim().Replace("&nbsp;" , " ");
 
         Directory.CreateDirectory(pathToOutput);
-        Anki2DbContext dbContext = new Anki2DbContext(pathToCollection, true);
+        Anki2DbContext dbContext = new(pathToCollection, true);
         List<NoteType> noteTypes = dbContext.NoteTypes.ToList();
         foreach (NoteType noteType in noteTypes)
         {
@@ -35,8 +36,8 @@ static class Program
 
             Console.Write($"Writing note type {noteType.Name}...");
 
-            using (StreamWriter writer = new StreamWriter(Path.Combine(pathToOutput, $"{noteType.Name}.csv")))
-            using (CsvWriter csvWriter = new CsvWriter(writer, System.Globalization.CultureInfo.InvariantCulture))
+            using (StreamWriter writer = new(Path.Combine(pathToOutput, $"{noteType.Name}.csv")))
+            using (CsvWriter csvWriter = new(writer, new CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture){ NewLine = "\n" }))
             {
                 csvWriter.WriteRecords(notes);
             }

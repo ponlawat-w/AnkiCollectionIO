@@ -2,7 +2,7 @@
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-Anki2DbContext dbContext = new Anki2DbContext("./data/collection.anki2");
+Anki2DbContext dbContext = new("./data/collection.anki2");
 List<NoteType> noteTypes = dbContext.NoteTypes.ToList();
 foreach (NoteType noteType in noteTypes)
 {
