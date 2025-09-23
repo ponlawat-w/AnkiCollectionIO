@@ -1,9 +1,10 @@
 ﻿using System.Dynamic;
+using System.Text.RegularExpressions;
 using AnkiCollectionIO.Schemas.Anki2;
 using CsvHelper;
 using CsvHelper.Configuration;
 
-static class Program
+static partial class Program
 {
     static void Main(string[] args)
     {
@@ -20,27 +21,21 @@ static class Program
 
         Directory.CreateDirectory(pathToOutput);
         Anki2DbContext dbContext = new(pathToCollection, true);
-        List<NoteType> noteTypes = dbContext.NoteTypes.ToList();
+        IEnumerable<NoteType> noteTypes = dbContext.NoteTypes;
         foreach (NoteType noteType in noteTypes)
         {
-            dynamic[] notes = dbContext.Notes
+            IEnumerable<dynamic> notes = dbContext.Notes
                 .Where(note => note.NoteTypeId == noteType.Id)
                 .OrderBy(note => note.SortField)
-                .Select(note => DictionaryToDynamic(note.GetFieldsDictionary(dbContext, injector)))
-                .ToArray();
-            
-            if (notes.Length == 0)
-            {
-                continue;
-            }
+                .Select(note => DictionaryToDynamic(note.GetFieldsDictionary(dbContext, injector)));
+
+            if (!notes.Any()) continue;
 
             Console.Write($"Writing note type {noteType.Name}...");
 
-            using (StreamWriter writer = new(Path.Combine(pathToOutput, $"{noteType.Name}.csv")))
-            using (CsvWriter csvWriter = new(writer, new CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture){ NewLine = "\n" }))
-            {
-                csvWriter.WriteRecords(notes);
-            }
+            using StreamWriter writer = new(Path.Combine(pathToOutput, $"{noteType.Name}.csv"));
+            using CsvWriter csvWriter = new(writer, new CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture) { NewLine = "\n" });
+            csvWriter.WriteRecords(notes);
 
             Console.WriteLine("OK");
         }
@@ -53,10 +48,14 @@ static class Program
         IDictionary<string, object> expandoObject = new ExpandoObject() as IDictionary<string, object>;
         foreach (KeyValuePair<string, string> dictElement in dictionary)
         {
-            expandoObject.Add(new KeyValuePair<string, object>(dictElement.Key, dictElement.Value));
+            string value = SoundRegex().Replace(dictElement.Value, "");
+            expandoObject.Add(new KeyValuePair<string, object>(dictElement.Key, value));
         }
 
         return expandoObject;
     }
+
+    [GeneratedRegex(@"\[sound:.+?\]")]
+    private static partial Regex SoundRegex();
 }
 
